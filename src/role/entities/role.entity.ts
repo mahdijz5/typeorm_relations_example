@@ -1,7 +1,6 @@
-import UserRoleRl from "src/user/entities/userRoleRl.entity";
-import { User } from "../../user/entities/user.entity";
+import UserRoleRl from "../../user/entities/userRoleRl.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import Menu from "src/menu/entities/menu.entity";
+import Menu from "../../menu/entities/menu.entity";
 
 @Entity()
 export default class Role {

@@ -1,4 +1,4 @@
-import MenuFrontRl from "src/menu/entities/menuFrontRl.enity";
+import MenuFrontRl from "../../menu/entities/menuFrontRl.enity";
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 

@@ -1,9 +1,13 @@
-import  Role  from 'src/role/entities/role.entity';
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import ClosureTableMenu from './closureTableMenu.entity';
+import  Role  from '../../role/entities/role.entity';
+import {Tree,TreeChildren,TreeParent, Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import MenuFrontRl from './menuFrontRl.enity';
 
 @Entity()
+@Tree("closure-table",{
+    closureTableName: "category_closure",
+    ancestorColumnName: (column) => "ancestor_" + column.propertyName,
+    descendantColumnName: (column) => "descendant_" + column.propertyName,
+})
 export default class Menu {
     @PrimaryGeneratedColumn({
         type : "bigint"
@@ -16,8 +20,11 @@ export default class Menu {
     @OneToMany(() => Role,(role) => role.menu)
     roles : Role[]
 
-    @OneToOne(() => ClosureTableMenu,(table)=> table.parent)
-    table : ClosureTableMenu
+    @TreeChildren()
+    children: Menu[]
+
+    @TreeParent()
+    parent: Menu
 
     @ManyToMany(() => MenuFrontRl)
     @JoinTable()

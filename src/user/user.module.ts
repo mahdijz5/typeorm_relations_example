@@ -6,12 +6,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
 import { ProvidersEnum } from 'src/utils/enums';
 import { User } from './entities/user.entity';
-import { Post } from 'src/post/entities/post.entity';
 import { UserRepository } from './user.repository';
-import { PostRepository } from 'src/post/post.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User,Post]), JwtModule.register({
+  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: {
       expiresIn: "1d"
@@ -21,7 +19,7 @@ import { PostRepository } from 'src/post/post.repository';
   providers: [{
     provide : ProvidersEnum.uesrService,
     useClass : UserService
-  },UserRepository,PostRepository],
+  },UserRepository],
   exports : [UserRepository]
 })
 export class UserModule {}

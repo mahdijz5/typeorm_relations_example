@@ -7,7 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { LocalGuard } from "./guards/local.guard"
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserData } from 'src/decorators/userData.decorator';
-import UserDataInterface from 'src/interface.ts/userData.interface';
+import UserDataInterface from '../interfaces/userData.interface';
 
 @ApiTags('Auth')
 @Controller('auth')

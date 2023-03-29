@@ -1,6 +1,5 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeUpdate, Column, Entity, JoinColumn,OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash, hashSync } from "bcrypt";
-import Role from "src/role/entities/role.entity";
 import UserRoleRl from "./userRoleRl.entity";
 
 
