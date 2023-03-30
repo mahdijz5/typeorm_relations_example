@@ -13,6 +13,7 @@ export class AuthService {
             const user = await this.userRepository.findOneBy({ email: data.email })
             if (user) throw new BadRequestException({ "message": "This User already exists." })
             const newUser = this.userRepository.create({ ...data, password: data.password })
+                
             this.userRepository.save(newUser)
             return {username : newUser.username,email : newUser.email};
             

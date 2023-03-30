@@ -1,4 +1,4 @@
-import { Entity, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Menu from './menu.entity';
 import Front from '../../front/entities/front.entity';
 
@@ -10,6 +10,7 @@ export default class MenuFrontRl {
     id : number
 
     @OneToOne(() => Menu,(menu) => menu.menuFrontRl)
+    @JoinColumn()
     front : Front           
     
     @ManyToMany(() => Menu)

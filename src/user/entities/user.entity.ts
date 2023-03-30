@@ -29,7 +29,6 @@ export class User {
     password: string
 
     @OneToOne(() => UserRoleRl,(userRoleRl) =>userRoleRl.user )
-    @JoinColumn()
     userRoleRl: UserRoleRl
 
     @BeforeUpdate()

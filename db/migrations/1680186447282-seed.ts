@@ -12,25 +12,26 @@ export class seed1680186447282 implements MigrationInterface {
 
         // admin 
         let admin_menu =  queryRunner.manager.create(Menu,{name : 'root'})
-        let admin_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{menus : []})
         let admin_front =  queryRunner.manager.create(Front,{name :"admin-front",description : "This is default front for admin"})
+        let admin_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{menus : []})
         let admin_role =  queryRunner.manager.create(Role,{name : "Admin"})
         let admin_userRoleRl =  queryRunner.manager.create(UserRoleRl,{roles :[]})
         let admin_user =  queryRunner.manager.create(User,{email:"root@root.com",username : "root",password : "root"})
         
         admin_menuFrontRl.menus.push(admin_menu)
+        admin_menuFrontRl.front = admin_front
         admin_role.menu = admin_menu
-        admin_front.menuFrontRl = admin_menuFrontRl
-        admin_user.userRoleRl = admin_userRoleRl
+        admin_userRoleRl.user = admin_user
         admin_userRoleRl.roles.push(admin_role)
-
+        console.log(admin_menuFrontRl)
+        console.log(admin_userRoleRl)
         await queryRunner.manager.save(admin_menu)
-        await queryRunner.manager.save(admin_menuFrontRl)
         await queryRunner.manager.save(admin_front)
+        await queryRunner.manager.save(admin_menuFrontRl)
+        await queryRunner.manager.save(admin_user)
         await queryRunner.manager.save(admin_role)
         await queryRunner.manager.save(admin_userRoleRl)
-        await queryRunner.manager.save(admin_user)
-
+        
         // user
         let user_menu =  queryRunner.manager.create(Menu,{name : 'user'})
         let user_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{menus : []})
@@ -39,13 +40,13 @@ export class seed1680186447282 implements MigrationInterface {
         let user_userRoleRl =  queryRunner.manager.create(UserRoleRl,{roles : []})
 
         user_menuFrontRl.menus.push(user_menu)
-        user_front.menuFrontRl = user_menuFrontRl
+        user_menuFrontRl.front = user_front
         user_role.menu = user_menu
         user_userRoleRl.roles.push(user_role)
 
         await queryRunner.manager.save(user_menu)
-        await queryRunner.manager.save(user_menuFrontRl)
         await queryRunner.manager.save(user_front)
+        await queryRunner.manager.save(user_menuFrontRl)
         await queryRunner.manager.save(user_role)
         await queryRunner.manager.save(user_userRoleRl)
     }

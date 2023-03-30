@@ -16,6 +16,5 @@ export default class Front {
     description : string
 
     @OneToOne(() => MenuFrontRl,(menuFrontRl)=>menuFrontRl.front)
-    @JoinColumn()
     menuFrontRl : MenuFrontRl
 } 
