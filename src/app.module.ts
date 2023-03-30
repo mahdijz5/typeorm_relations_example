@@ -30,9 +30,6 @@ const rootDir = process.env.NODE_ENV === 'dist'
       database: process.env.DB_NAME,
       entities: [User,Role,UserRoleRl,Menu,MenuFrontRl,FrontModule,Front],
       synchronize: true,
-      migrations: [
-          `${rootDir}/database/seeds/*.ts`
-      ],
     }),UserModule, MenuModule, FrontModule, RoleModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],

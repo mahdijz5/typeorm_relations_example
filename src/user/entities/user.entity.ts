@@ -30,7 +30,7 @@ export class User {
 
     @OneToOne(() => UserRoleRl,(userRoleRl) =>userRoleRl.user )
     @JoinColumn()
-    userRoleRl : UserRoleRl
+    userRoleRl: UserRoleRl
 
     @BeforeUpdate()
     async hashPassword() {

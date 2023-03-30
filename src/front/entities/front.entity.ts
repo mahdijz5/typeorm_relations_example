@@ -1,5 +1,5 @@
 import MenuFrontRl from "../../menu/entities/menuFrontRl.enity";
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 
 @Entity()
@@ -15,6 +15,7 @@ export default class Front {
     @Column({length : 400})
     description : string
 
-    @ManyToMany(() => MenuFrontRl)
+    @OneToOne(() => MenuFrontRl,(menuFrontRl)=>menuFrontRl.front)
+    @JoinColumn()
     menuFrontRl : MenuFrontRl
 } 

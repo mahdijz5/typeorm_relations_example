@@ -4,7 +4,7 @@ import MenuFrontRl from './menuFrontRl.enity';
 
 @Entity()
 @Tree("closure-table",{
-    closureTableName: "category_closure",
+    closureTableName: "menu",
     ancestorColumnName: (column) => "ancestor_" + column.propertyName,
     descendantColumnName: (column) => "descendant_" + column.propertyName,
 })
@@ -14,7 +14,7 @@ export default class Menu {
     })
     id: number
 
-    @Column({length : 100})
+    @Column({length : 100,unique : true})
     name : string
 
     @OneToMany(() => Role,(role) => role.menu)
@@ -27,6 +27,5 @@ export default class Menu {
     parent: Menu
 
     @ManyToMany(() => MenuFrontRl)
-    @JoinTable()
-    menuFrontRl : MenuFrontRl
+    menuFrontRl : MenuFrontRl[]
 }

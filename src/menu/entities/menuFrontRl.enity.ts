@@ -10,9 +10,9 @@ export default class MenuFrontRl {
     id : number
 
     @OneToOne(() => Menu,(menu) => menu.menuFrontRl)
-    menu : Menu
-
-    @ManyToMany(() => Front)
+    front : Front           
+    
+    @ManyToMany(() => Menu)
     @JoinTable()
-    fronts : Front[]            
+    menus : Menu[]
 }
