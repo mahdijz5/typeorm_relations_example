@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOneOptions, FindOptionsWhere, FindOptionsWhereProperty, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiTags } from '@nestjs/swagger';
@@ -17,7 +17,7 @@ export class UserRepository {
         return await this.userRepository.findOneBy(certificate)
     }
 
-    async findOne(certificate: object) {
+    async findOne(certificate: FindOneOptions<User>) {
         return await this.userRepository.findOne(certificate)
     }
 

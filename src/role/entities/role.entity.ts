@@ -1,6 +1,7 @@
-import UserRoleRl from "../../user/entities/userRoleRl.entity";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {UserRoleRl} from "../../user/entities/userRoleRl.entity";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Menu from "../../menu/entities/menu.entity";
+import MenuRoleRl from "src/role/entities/menuRoleRl.entity";
 
 @Entity()
 export default class Role {
@@ -19,7 +20,7 @@ export default class Role {
     @ManyToMany(() => UserRoleRl)
     userRoleRl : UserRoleRl[]
 
-    @ManyToOne(() => Menu,(menu) => menu.roles)
-    @JoinColumn()
-    menu : Menu
+    @OneToOne(() => MenuRoleRl,(menuRoleRl) => menuRoleRl.role)
+    menuRoleRl : MenuRoleRl
+    
 }

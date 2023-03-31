@@ -1,3 +1,4 @@
+import { UserRoleRepository } from './../user/user.role.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
@@ -9,15 +10,18 @@ import { AuthController } from './auth.controller';
 import { JwtGuard } from './guards/jwt.guard';
 import { User } from 'src/user/entities/user.entity';
 import { UserRepository } from 'src/user/user.repository';
+import { UserRoleRl } from 'src/user/entities/userRoleRl.entity';
+import Role from 'src/role/entities/role.entity';
+import { RoleRepository } from 'src/role/role.repository';
  
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), PassportModule, JwtModule.register({
+  imports: [TypeOrmModule.forFeature([User,UserRoleRl,Role]), PassportModule, JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: {
       expiresIn: "1d"
     }
   })],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,UserRepository],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,UserRepository,RoleRepository,UserRoleRepository,],
   controllers: [AuthController],
   exports: [JwtStrategy,JwtGuard]
 })

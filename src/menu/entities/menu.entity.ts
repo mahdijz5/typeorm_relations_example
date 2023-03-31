@@ -1,6 +1,6 @@
-import  Role  from '../../role/entities/role.entity';
-import {Tree,TreeChildren,TreeParent, Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {Tree,TreeChildren,TreeParent, Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import MenuFrontRl from './menuFrontRl.enity';
+import MenuRoletRl from '../../role/entities/menuRoleRl.entity';
 
 @Entity()
 @Tree("closure-table",{
@@ -17,9 +17,6 @@ export default class Menu {
     @Column({length : 100,unique : true})
     name : string
 
-    @OneToMany(() => Role,(role) => role.menu)
-    roles : Role[]
-
     @TreeChildren()
     children: Menu[]
 
@@ -28,4 +25,7 @@ export default class Menu {
 
     @ManyToMany(() => MenuFrontRl)
     menuFrontRl : MenuFrontRl[]
+
+    @ManyToMany(() => MenuRoletRl)
+    menuRoleRl : MenuRoletRl[]
 }

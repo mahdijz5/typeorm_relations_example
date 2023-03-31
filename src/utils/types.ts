@@ -1,3 +1,5 @@
+//! User
+
 export type CreateUserParams = {
     username: string
     email: string
@@ -15,19 +17,11 @@ export type ResetPasswordParams = {
     confirmPassword : string
 }
 
-export type CreatePostParams = {
-    userId  : number
-    title : string
-    body : string
+//! Role
+export type CreateRoleParams = {
+    name : string
 }
 
-export type UpdatePostParams = {
-    id :number
-    title : string
-    body : string
-}
-
-export type CreatePaymentParams = {
-    email : string
-    price : number  
+export type UpdateRoleParams = {
+    name : string
 }

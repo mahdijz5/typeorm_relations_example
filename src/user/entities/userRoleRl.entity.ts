@@ -3,7 +3,7 @@ import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedCo
 import { User } from './user.entity';
 
 @Entity()
-export default class UserRoleRl {
+export class UserRoleRl {
     @PrimaryGeneratedColumn({
         type : "bigint"
     })
@@ -11,7 +11,7 @@ export default class UserRoleRl {
 
     @OneToOne(() => User,(user) => user.userRoleRl)
     @JoinColumn()
-    user : User
+    user? : User
 
     @ManyToMany(() => Role)
     @JoinTable()

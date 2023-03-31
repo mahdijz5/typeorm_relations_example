@@ -7,13 +7,16 @@ import { JwtService } from "@nestjs/jwt";
 import { LocalGuard } from "./guards/local.guard"
 import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { UserData } from 'src/decorators/userData.decorator';
-import UserDataInterface from '../interfaces/userData.interface';
+import UserDataInterface from   '../interfaces/userData.interface';
+import { Roles } from 'src/decorators/role.decorator';
+import { RolesGuard } from './guards/role.guard';
+import { RoleEnum } from 'src/utils/enums';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService) { }
-
+    
     @ApiOperation({ summary: 'Registering user' })
     @ApiCreatedResponse({ description: 'User has been created successfully.' })
     @ApiBadRequestResponse({ description: 'User already exists' })
@@ -37,7 +40,7 @@ export class AuthController {
     login(@Body() body: LoginUserDto, @UserData() user: UserDataInterface, @Res() res: Response) {
         res.status(200).json({ "message": "Your authorized",...this.authService.generateToken(user) })
     }
-
+    
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Authorize user' })
     @ApiOkResponse({ description: 'Your authorized' })
@@ -47,10 +50,21 @@ export class AuthController {
     auth(@Res() res : Response,@UserData() user : any) {
         res.status(200).json({"message" : "You are athorized","user" : user})
     }
+
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Authorize admin' })
+    @ApiOkResponse({ description: 'Your authorized' })
+    @ApiUnauthorizedResponse({ description: 'Unauthorized Request' })
+    @Post("admin")
+    @Roles(RoleEnum.admin)
+    @UseGuards(JwtGuard)
+    authAdmin(@Res() res : Response,@UserData() user : any) {
+        res.status(200).json({"message" : "You are athorized","user" : user})
+    }
     
     @ApiOkResponse({ description: 'Email has been sent' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized Request' })
-    @ApiOperation({ summary: 'It check if email valid then send email ' })
+    @ApiOperation({ summary: 'It checks if email valid then send email ' })
     @Post('forgot-password')
     async forgotPassword(@Req() req: Request, @Body() body: ForgotPasswordDto, @Res() res: Response ){
         const data = await this.authService.validateEmailToChangePassword(body)
@@ -59,7 +73,7 @@ export class AuthController {
 
     @ApiOkResponse({ description: 'Password has been changed.' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized Request' })
-    @ApiOperation({ summary: 'It let user reset his password if entred Link is valid' })
+    @ApiOperation({ summary: 'It lets user reset his password if entred Link is valid' })
     @Put("reset-password/:token")
     async resetPassword(@Param("token") token: string, @Body() body: ResetPasswordDto, @Res() res: Response) {
         try {

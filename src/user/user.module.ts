@@ -1,3 +1,4 @@
+import { RoleRepository } from './../role/role.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
@@ -7,9 +8,12 @@ import { AuthModule } from 'src/auth/auth.module';
 import { ProvidersEnum } from 'src/utils/enums';
 import { User } from './entities/user.entity';
 import { UserRepository } from './user.repository';
+import { UserRoleRepository } from './user.role.repository';
+import { UserRoleRl } from './entities/userRoleRl.entity';
+import Role from 'src/role/entities/role.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({
+  imports: [TypeOrmModule.forFeature([User,UserRoleRl,Role]) , JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: {
       expiresIn: "1d"
@@ -19,7 +23,7 @@ import { UserRepository } from './user.repository';
   providers: [{
     provide : ProvidersEnum.uesrService,
     useClass : UserService
-  },UserRepository],
-  exports : [UserRepository]
+  },UserRepository,UserRoleRepository,RoleRepository],
+  exports : [UserRepository,UserRoleRepository]
 })
 export class UserModule {}

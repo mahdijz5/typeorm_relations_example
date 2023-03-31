@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
@@ -10,10 +11,12 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import Role from './role/entities/role.entity';
-import UserRoleRl from './user/entities/userRoleRl.entity';
+import {UserRoleRl} from './user/entities/userRoleRl.entity';
 import Front  from 'src/front/entities/front.entity';
 import MenuFrontRl  from 'src/menu/entities/menuFrontRl.enity';
 import Menu from './menu/entities/menu.entity';
+import MenuRoletRl from './role/entities/menuRoleRl.entity';
+import { RolesGuard } from './auth/guards/role.guard';
 
 const rootDir = process.env.NODE_ENV === 'dist'
     ? 'dist'
@@ -28,10 +31,13 @@ const rootDir = process.env.NODE_ENV === 'dist'
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User,Role,UserRoleRl,Menu,MenuFrontRl,FrontModule,Front],
+      entities: [User,Role,Menu,MenuFrontRl,FrontModule,Front,MenuRoletRl,UserRoleRl],
       synchronize: true,
     }),UserModule, MenuModule, FrontModule, RoleModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,{
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  }],
 })
 export class AppModule {}

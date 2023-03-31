@@ -1,6 +1,6 @@
-import { BeforeUpdate, Column, Entity, JoinColumn,OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn,OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { hash, hashSync } from "bcrypt";
-import UserRoleRl from "./userRoleRl.entity";
+import {UserRoleRl} from "./userRoleRl.entity";
 
 
 @Entity({name : "user"})
@@ -31,6 +31,7 @@ export class User {
     @OneToOne(() => UserRoleRl,(userRoleRl) =>userRoleRl.user )
     userRoleRl: UserRoleRl
 
+    @BeforeInsert()
     @BeforeUpdate()
     async hashPassword() {
         if (this.password) {
