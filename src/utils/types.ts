@@ -9,9 +9,8 @@ export type CreateUserParams = {
 }
 
 export type UpdateUserParams = {
-    username: string
-    email: string
-    password: string
+    username?: string
+    email?: string
 }
 
 export type ResetPasswordParams = {
@@ -25,7 +24,8 @@ export type CreateRoleParams = {
 }
 
 export type UpdateRoleParams = {
-    name : string
+    name? : string
+    menusId? : number[]
 }
 
 //! Front

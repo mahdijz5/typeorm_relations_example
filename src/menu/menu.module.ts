@@ -9,9 +9,10 @@ import { MenuRepository } from './menu.repository';
 import { FrontRepository } from 'src/front/front.repository';
 import Front from 'src/front/entities/front.entity';
 import { MenuFrontRepository } from './menuFront.repository';
+import { FrontModule } from 'src/front/front.module';
 
 @Module({
-  imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl])],
+  imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl]),FrontModule],
   controllers: [MenuController],
   providers: [MenuService,MenuRepository,FrontRepository,MenuFrontRepository],
   exports : [MenuRepository,MenuFrontRepository]

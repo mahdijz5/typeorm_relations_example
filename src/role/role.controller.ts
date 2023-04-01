@@ -33,13 +33,13 @@ export class RoleController {
     @ApiNotFoundResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Role has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Put("edit:id")
+    @Put("edit/:id")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async updateRole(@Body() body : UpdateRoleDto,@Param('id') id: number,@Res() res : Response) {
         try {
             await this.roleService.update(body,id)
-            res.status(200).json({"message" : "User has been updated"})
+            res.status(200).json({"message" : "Role has been updated"})
         } catch (error) {
             throw error
         }
@@ -49,7 +49,7 @@ export class RoleController {
     @ApiBadRequestResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Role has been removed.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Delete("remove:id")
+    @Delete("remove/:id")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async removeRole(@Param('id') id: number,@Res() res : Response) {

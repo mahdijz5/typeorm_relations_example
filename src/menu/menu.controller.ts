@@ -35,7 +35,7 @@ export class MenuController {
     }
 
 
-    @ApiOperation({ summary: 'Edit menu (adding front to menu)' })
+    @ApiOperation({ summary: 'Edit menu -- (You can add front HERE)' })
     @ApiNotFoundResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Menu has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
@@ -67,11 +67,12 @@ export class MenuController {
         }
     }
 
+    @ApiOperation({ summary: 'Searching menus' })
     @ApiOkResponse()
     @ApiQuery({ name: "limit", type: Number,required : false })
     @ApiQuery({ name: "page", type: Number,required : false })
     @ApiQuery({ name: "search", type: String,required : false })
-    @Get("find")
+    @Get("search")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async search(@Query() query: { limit: number, page: number,search : string }) {
@@ -84,6 +85,7 @@ export class MenuController {
             throw error
         }
     }
+    @ApiOperation({ summary: 'Get menus in tree form' })
     @ApiOkResponse()
     @Get("findTree")
     @Roles(RoleEnum.admin)

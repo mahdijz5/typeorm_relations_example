@@ -7,8 +7,9 @@ export class UpdateMenuDto {
         description: "This is a required property",
         maxLength: 150,
         uniqueItems: true,
+        required : false,
     })
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @Length(1, 150)
     name: string

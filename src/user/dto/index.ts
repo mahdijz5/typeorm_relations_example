@@ -1,3 +1,3 @@
-import { UpdatePostDto } from './updatePost.dto';
-import { CreatePostDto } from './createPost.dto';
-export { CreatePostDto,UpdatePostDto }
+import { UpdateUserDto } from './updateUser.dto';
+import { UpdateUserByAdminDto } from './updateUserByAdmin.dto';
+export { UpdateUserByAdminDto,UpdateUserDto }

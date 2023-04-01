@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsArray, IsNotEmpty, IsOptional, IsString } from "class-validator";
 
 export class UpdateRoleDto {
     @ApiProperty({
@@ -11,4 +11,12 @@ export class UpdateRoleDto {
     @IsNotEmpty()
     @IsString()
     name : string
+
+    @ApiProperty({
+        description : "This is NOT a required property",
+        type : [Number],
+    })
+    @IsOptional()
+    @IsArray()
+    menusId : number[]
 }

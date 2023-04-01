@@ -13,19 +13,12 @@ export class MenuFrontRepository {
     constructor(@InjectRepository(MenuFrontRl) private menuFrontRepository : Repository<MenuFrontRl>,private frontRepository : FrontRepository){}
 
 
+    create(data : DeepPartial<MenuFrontRl>) : MenuFrontRl {
+        return this.menuFrontRepository.create(data)
+    }
 
-    async JoinMenuAndFrontsByIdList(menu: Menu, frontIdList: number[]): Promise<MenuFrontRl> {
-        const fronts = await this.frontRepository.findByListOfId(frontIdList)
-        let menuFront: MenuFrontRl;
-        if (fronts.length > 0) {
-            menuFront = this.menuFrontRepository.create({ fronts: fronts })
-        } else {
-            const deafultFront = await this.frontRepository.findOneBy({ name: "user-front" })
-            menuFront = this.menuFrontRepository.create({ fronts: [deafultFront] })
-        }
-        menuFront.menu = menu
-        this.menuFrontRepository.save(menuFront)
-        return menuFront
-    }   
+    async save(data  : MenuFrontRl) : Promise<MenuFrontRl>{
+        return await this.menuFrontRepository.save(data)
+    }
 
 }

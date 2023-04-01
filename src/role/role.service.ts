@@ -1,3 +1,4 @@
+import { UpdateRoleParams } from './../utils/types';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { RoleRepository } from './role.repository';
 import { CreateRoleParams } from 'src/utils/types';
@@ -23,9 +24,9 @@ export class RoleService {
         }
     }
 
-    async update(data : CreateRoleParams,id:number)  {
+    async update(data : UpdateRoleParams,id:number)  {
         try {
-            await this.roleRepository.update(data,id)
+            return await this.roleRepository.update({name : data.name},id,data.menusId)
         } catch (error) {
             throw error
         }
@@ -38,13 +39,10 @@ export class RoleService {
             throw error
         }
     }
-
+ 
     async find(limit: number, page: number, searchQuery :string) {
-        const query = `%${searchQuery}%`
         try {
-            const queryBuilder = this.roleRepository.createQueryBuilder('role')
-            queryBuilder.where('role.name LIKE :query', { query }).limit(limit).offset((page - 1) * limit);
-            return await queryBuilder.getMany();
+            return await this.roleRepository.search(limit,page,searchQuery)
         } catch (error) {
             throw error
         }

@@ -13,15 +13,23 @@ import { UserRepository } from 'src/user/user.repository';
 import { UserRoleRl } from 'src/user/entities/userRoleRl.entity';
 import Role from 'src/role/entities/role.entity';
 import { RoleRepository } from 'src/role/role.repository';
+import { MenuRoleRepository } from 'src/role/menuRole.repository';
+import { MenuRepository } from 'src/menu/menu.repository';
+import { FrontRepository } from 'src/front/front.repository';
+import { MenuFrontRepository } from 'src/menu/menuFront.repository';
+import MenuRoleRl from 'src/role/entities/menuRoleRl.entity';
+import Menu from 'src/menu/entities/menu.entity';
+import Front from 'src/front/entities/front.entity';
+import MenuFrontRl from 'src/menu/entities/menuFrontRl.enity';
  
 @Module({
-  imports: [TypeOrmModule.forFeature([User,UserRoleRl,Role]), PassportModule, JwtModule.register({
+  imports: [TypeOrmModule.forFeature([User,Role,UserRoleRl,MenuRoleRl,Menu,Front,MenuFrontRl]), PassportModule, JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: {
       expiresIn: "1d"
     }
   })],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,UserRepository,RoleRepository,UserRoleRepository,],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,UserRepository,RoleRepository,UserRoleRepository,MenuRoleRepository,MenuRepository,FrontRepository,MenuFrontRepository],
   controllers: [AuthController],
   exports: [JwtStrategy,JwtGuard]
 })

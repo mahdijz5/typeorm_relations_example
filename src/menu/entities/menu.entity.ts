@@ -27,7 +27,7 @@ export default class Menu {
     depth : number
 
     @OneToOne(() => MenuFrontRl,(menuFrontRl) => menuFrontRl.menu)
-    menuFrontRl : MenuFrontRl[]
+    menuFrontRl : MenuFrontRl
 
     @ManyToMany(() => MenuRoletRl)
     menuRoleRl : MenuRoletRl[]
