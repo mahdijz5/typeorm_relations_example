@@ -1,7 +1,9 @@
+import { DeleteResult, In } from 'typeorm';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import Front from "./entities/front.entity";
 import { DeepPartial, FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
+import {BadRequestException} from "@nestjs/common"
 
 @Injectable()
 export class FrontRepository {
@@ -13,11 +15,15 @@ export class FrontRepository {
     }
 
     async update(data:DeepPartial<Front>,id:number) : Promise<UpdateResult> {
-        return await this.frontRepository.update({id},data)
+        const result = await this.frontRepository.update({id},data)
+        if(result.affected === 0) {throw new BadRequestException("Front doesn't exist")}
+        return result
     }
 
-    async remove(id:number) : Promise<void> {
-        await this.frontRepository.delete({id})
+    async remove(id:number) : Promise<DeleteResult> {
+        const result=await this.frontRepository.delete({id})
+        if(result.affected === 0) {throw new BadRequestException("Front doesn't exist")}
+        return result
     }
 
     async save(role:Front) {
@@ -26,6 +32,12 @@ export class FrontRepository {
 
     async findOneBy(certification:FindOptionsWhere<Front>) : Promise<Front> {
         return await this.frontRepository.findOneBy(certification)
+    }
+
+    async findByListOfId(idList : number[]) {
+        return await this.frontRepository.find({
+            where : {id : In(idList)}            
+        })
     }
 
     createQueryBuilder(entity:string) {

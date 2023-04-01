@@ -14,15 +14,15 @@ export class seed1680186447282 implements MigrationInterface {
         // admin 
         let admin_menu =  queryRunner.manager.create(Menu,{name : 'root'})
         let admin_front =  queryRunner.manager.create(Front,{name :"admin-front",description : "This is default front for admin"})
-        let admin_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{menus : []})
+        let admin_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{fronts : []})
         let admin_role =  queryRunner.manager.create(Role,{name : "admin"})
         let admin_userRoleRl =  queryRunner.manager.create(UserRoleRl,{roles :[]})
         let admin_user =  queryRunner.manager.create(User,{email:"root@root.com",username : "root",password : "root"})
         let admin_menuRoleRl =  queryRunner.manager.create(MenuRoletRl,{menus : []})
 
         
-        admin_menuFrontRl.menus.push(admin_menu)
-        admin_menuFrontRl.front = admin_front
+        admin_menuFrontRl.menu =admin_menu
+        admin_menuFrontRl.fronts.push(admin_front)
         admin_userRoleRl.user = admin_user
         admin_userRoleRl.roles.push(admin_role)
         admin_menuRoleRl.menus.push(admin_menu) 
@@ -38,13 +38,13 @@ export class seed1680186447282 implements MigrationInterface {
         
         // user
         let user_menu =  queryRunner.manager.create(Menu,{name : 'user'})
-        let user_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{menus : []})
+        let user_menuFrontRl =  queryRunner.manager.create(MenuFrontRl,{fronts : []})
         let user_front =  queryRunner.manager.create(Front,{description : "This is default front for user",name :"user-front" })
         let user_role =  queryRunner.manager.create(Role,{name : "user"})
         let user_menuRoleRl =  queryRunner.manager.create(MenuRoletRl,{menus : []})
 
-        user_menuFrontRl.menus.push(user_menu)
-        user_menuFrontRl.front = user_front
+        user_menuFrontRl.menu =user_menu
+        user_menuFrontRl.fronts.push(user_front)
         user_menuRoleRl.menus.push(user_menu)
         user_menuRoleRl.role =user_role
 

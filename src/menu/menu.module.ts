@@ -6,11 +6,14 @@ import { MenuService } from './menu.service';
 import { MenuController } from './menu.controller';
 import Menu from './entities/menu.entity';
 import { MenuRepository } from './menu.repository';
+import { FrontRepository } from 'src/front/front.repository';
+import Front from 'src/front/entities/front.entity';
+import { MenuFrontRepository } from './menuFront.repository';
 
 @Module({
-  imports :[TypeOrmModule.forFeature([Menu])],
+  imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl])],
   controllers: [MenuController],
-  providers: [MenuService,MenuRepository],
-  exports : [MenuRepository]
+  providers: [MenuService,MenuRepository,FrontRepository,MenuFrontRepository],
+  exports : [MenuRepository,MenuFrontRepository]
 })
 export class MenuModule {}

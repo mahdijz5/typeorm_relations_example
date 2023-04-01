@@ -1,6 +1,7 @@
+import { isEmpty } from './../utils/tools';
 import { JwtGuard } from './../auth/guards/jwt.guard';
 import { Query, Body, Controller, Post, UseGuards, Param, Res, Get, Delete, Put } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/decorators/role.decorator';
 import { MenuService } from './menu.service';
 import { RoleEnum } from 'src/utils/enums';
@@ -14,22 +15,27 @@ import { CreateMenuDto,UpdateMenuDto } from './dto';
 export class MenuController {
     constructor(private menuService : MenuService) {}
 
-    @ApiOperation({ summary: 'Create menu' })
+    @ApiOperation({ summary: 'Create menu | parent id is optional' })
     @ApiBadRequestResponse({ description: "Menu is already exist" })
     @ApiCreatedResponse({ description: 'Menu has been created.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Post()
+    @Post("create")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
-    async create(@Body() body : CreateMenuDto, ) {
+    async create(@Body() body : CreateMenuDto ) {
         try {
-            return await this.menuService.create(body)
+            if(isEmpty(body.parent)) {
+                return await this.menuService.create({name : body.name})
+            }else {
+                return await this.menuService.createChildren({name : body.name},body.parent)
+            }
         } catch (error) {
             throw error
         }
     }
 
-    @ApiOperation({ summary: 'Edit menu' })
+
+    @ApiOperation({ summary: 'Edit menu (adding front to menu)' })
     @ApiNotFoundResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Menu has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
@@ -74,6 +80,17 @@ export class MenuController {
         const search = query.search || ""
         try {
             return await this.menuService.find(limit, page, search)
+        } catch (error) {
+            throw error
+        }
+    }
+    @ApiOkResponse()
+    @Get("findTree")
+    @Roles(RoleEnum.admin)
+    @UseGuards(JwtGuard)
+    async findTree(@Query() query: { limit: number, page: number,search : string }) {
+        try {
+            return await this.menuService.findTree()
         } catch (error) {
             throw error
         }

@@ -1,5 +1,7 @@
 //! User
 
+import Menu from "src/menu/entities/menu.entity"
+
 export type CreateUserParams = {
     username: string
     email: string
@@ -23,5 +25,26 @@ export type CreateRoleParams = {
 }
 
 export type UpdateRoleParams = {
+    name : string
+}
+
+//! Front
+export type CreateMenuParams = {
+    name : string,
+    parent? : Menu
+}
+
+export type UpdateMenuParams = {
+    name : string
+    parent? : number
+    fronts? : number[]
+}
+
+//! Front
+export type CreateFrontParams = {
+    name : string
+}
+
+export type UpdateFrontParams = {
     name : string
 }
