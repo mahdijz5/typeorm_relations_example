@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, SetMetadata } from '@nestjs/common';
 import { isAdmin, isEmpty } from './../utils/tools';
 import { UserData } from './../decorators/userData.decorator';
 import { JwtGuard } from './../auth/guards/jwt.guard';
@@ -25,6 +25,7 @@ export class UserController {
     @ApiOperation({ summary: "Get user by id" })
     @ApiOkResponse()
     @ApiNotFoundResponse({ description: "User doesnt exist." })
+    @Roles(RoleEnum.admin)
     @Get(":id")
     async getUser(@Param("id", ParseIntPipe) id: number) {
         try {
@@ -39,8 +40,8 @@ export class UserController {
     @ApiBadRequestResponse({ description: "User doesnt exist" })
     @ApiOkResponse({ description: 'User has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Put("edit-by-admin/:id")
     @UseGuards(JwtGuard)
+    @Put("edit-by-admin/:id")
     async updateUserByAdmin(@Body() body : UpdateUserByAdminDto,@Param('id') id: number,@Res() res : Response) {
         try {
             const {email,username,rolesId} = body

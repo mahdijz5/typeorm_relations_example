@@ -31,19 +31,4 @@ export class UserRoleRepository {
         userRole.user = user;
         return userRole;
     }
-
-    async JoinUserAndRolesByIdList(user: User, menuIdList: number[]): Promise<UserRoleRl> {
-        const roles = await this.roleRepository.findByListOfId(menuIdList)
-        let userRole: UserRoleRl;
-        userRole = this.create({ roles : [] })
-        if (roles.length > 0) {
-            userRole.roles = roles
-        } else {
-            const defaultRole = await this.roleRepository.findOneBy({ name: "user" })
-            userRole.roles.push(defaultRole)
-        }
-        userRole.user = user
-        return await this.save(userRole)
-    }
-
 }

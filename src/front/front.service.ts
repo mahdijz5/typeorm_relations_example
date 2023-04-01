@@ -41,9 +41,7 @@ export class FrontService {
     async find(limit: number, page: number, searchQuery :string) {
         const query = `%${searchQuery}%`
         try {
-            const queryBuilder = this.roleRepository.createQueryBuilder('front')
-            queryBuilder.where('front.name LIKE :query', { query }).limit(limit).offset((page - 1) * limit);
-            return await queryBuilder.getMany();
+            const queryBuilder = this.roleRepository.search(query,page,limit)
         } catch (error) {
             throw error
         }

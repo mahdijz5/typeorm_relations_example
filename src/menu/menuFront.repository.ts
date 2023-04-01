@@ -1,12 +1,8 @@
 import MenuFrontRl  from 'src/menu/entities/menuFrontRl.enity';
 import { Injectable } from "@nestjs/common";
-import {  DeepPartial, DeleteResult, FindOptionsWhere, Repository, UpdateResult } from "typeorm";
-import Menu from "./entities/menu.entity";
+import {  DeepPartial,  Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
-import {BadRequestException} from "@nestjs/common"
-import dataSource from "db/data-source";
 import { FrontRepository } from "src/front/front.repository";
-import Front from 'src/front/entities/front.entity';
 
 @Injectable()
 export class MenuFrontRepository {

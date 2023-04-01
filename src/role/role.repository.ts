@@ -1,5 +1,5 @@
 import { BadRequestException } from '@nestjs/common';
-import { Injectable } from '@nestjs/common';
+import {Inject,forwardRef, Injectable } from '@nestjs/common';
 import {  Any, DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, In, Like, Repository, UpdateResult } from "typeorm";
 import Role from "./entities/role.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,14 +11,8 @@ import { MenuRepository } from 'src/menu/menu.repository';
 
 @Injectable()
 export class RoleRepository {
-    constructor(@InjectRepository(Role) private roleRepository: Repository<Role>, private menuRoleRepository : MenuRoleRepository,private menuRepository : MenuRepository) {}
+    constructor(@InjectRepository(Role) private roleRepository: Repository<Role>, private menuRoleRepository : MenuRoleRepository, @Inject(forwardRef(() => MenuRepository)) private menuRepository : MenuRepository,) {}
     
-
-
-    create(data:DeepPartial<Role>) : Role {
-        return this.roleRepository.create(data)
-    }
-
     async updateRole(certification : FindOptionsWhere<Role>,data : DeepPartial<Role>): Promise<{affected?: number}> {
         if(isEmpty(data.name)) return {affected : 0}
 
@@ -27,7 +21,7 @@ export class RoleRepository {
         return await this.roleRepository.update(certification,data)
     }
 
-    async update(data: DeepPartial<Role>, id: number, menuIds: number[] = []) {
+    async update(data: DeepPartial<Role>, id: number, menuIds: number[] = []) : Promise<Role> {
         try {
             const { role,roleMenu} =await this.provideRelationForUser(id)
             await this.updateRole({id},data)
@@ -69,27 +63,6 @@ export class RoleRepository {
         }
     }
 
-    async remove(id:number) : Promise<DeleteResult> {
-        const result = await this.roleRepository.delete({id})
-        if(result.affected === 0) {throw new BadRequestException("Role doesn't exist")}
-        return result
-    }
-
-    async save(role:Role) {
-        return await this.roleRepository.save(role)
-    }
-
-    async findOneBy(certification:FindOptionsWhere<Role>) : Promise<Role> {
-        return await this.roleRepository.findOneBy(certification)
-    }
-
-    async find(certification:FindManyOptions<Role>) : Promise<Role[]> {
-        return await this.roleRepository.find(certification)
-    }
-
-    async findOne(certification:FindOneOptions<Role>) : Promise<Role> {
-        return await this.roleRepository.findOne(certification)
-    }
 
     async getRoleOf(id:number[]):Promise<Role[]>{
         try {
@@ -123,11 +96,37 @@ export class RoleRepository {
     }
 
 
-    async findByListOfId(idList : number[]) {
+    async findByListOfId(idList : number[]) : Promise<Role[]>{
         return await this.roleRepository.find({
             where : {id : In(idList)}            
         })
     }
 
+    // ! BASICS
     
+    async remove(id:number) : Promise<DeleteResult> {
+        const result = await this.roleRepository.delete({id})
+        if(result.affected === 0) {throw new BadRequestException("Role doesn't exist")}
+        return result
+    }
+
+    async save(role:Role) {
+        return await this.roleRepository.save(role)
+    }
+
+    async findOneBy(certification:FindOptionsWhere<Role>) : Promise<Role> {
+        return await this.roleRepository.findOneBy(certification)
+    }
+
+    async find(certification:FindManyOptions<Role>) : Promise<Role[]> {
+        return await this.roleRepository.find(certification)
+    }
+
+    async findOne(certification:FindOneOptions<Role>) : Promise<Role> {
+        return await this.roleRepository.findOne(certification)
+    }
+
+    create(data:DeepPartial<Role>) : Role {
+        return this.roleRepository.create(data)
+    }
 }

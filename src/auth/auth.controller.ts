@@ -35,8 +35,8 @@ export class AuthController {
     @ApiBadRequestResponse({ description: "User doesn't exists" })
     @ApiOkResponse({ description: 'Your authorized' })
     @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-    @Post(("login"))
     @UseGuards(LocalGuard)
+    @Post(("login"))
     login(@Body() body: LoginUserDto, @UserData() user: UserDataInterface, @Res() res: Response) {
         res.status(200).json({ "message": "Your authorized",...this.authService.generateToken(user) })
     }
@@ -55,9 +55,9 @@ export class AuthController {
     @ApiOperation({ summary: 'Authorize admin' })
     @ApiOkResponse({ description: 'Your authorized' })
     @ApiUnauthorizedResponse({ description: 'Unauthorized Request' })
-    @Post("admin")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
+    @Post("admin")
     authAdmin(@Res() res : Response,@UserData() user : any) {
         res.status(200).json({"message" : "You are athorized","user" : user})
     }

@@ -1,4 +1,4 @@
-import { Any, DeleteResult, FindManyOptions, In } from 'typeorm';
+import { Any, DeleteResult, FindManyOptions, In, Like } from 'typeorm';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import Front from "./entities/front.entity";
@@ -26,19 +26,7 @@ export class FrontRepository {
         return result
     }
 
-    async save(role: Front) {
-        return await this.frontRepository.save(role)
-    }
-
-    async findOneBy(certification: FindOptionsWhere<Front>): Promise<Front> {
-        return await this.frontRepository.findOneBy(certification)
-    }
-
-    async find(certification: FindManyOptions<Front>): Promise<Front[]> {
-        return await this.frontRepository.find(certification)
-    }
-
-    async findByListOfId(idList: number[]) {
+    async findByListOfId(idList: number[]):Promise<Front[]>{
         return await this.frontRepository.find({
             where: { id: In(idList) }
         })
@@ -65,8 +53,29 @@ export class FrontRepository {
         }
     }
 
-    createQueryBuilder(entity: string) {
-        return this.frontRepository.createQueryBuilder(entity)
+
+    async save(role: Front) {
+        return await this.frontRepository.save(role)
+    }
+
+    async findOneBy(certification: FindOptionsWhere<Front>): Promise<Front> {
+        return await this.frontRepository.findOneBy(certification)
+    }
+
+    async find(certification: FindManyOptions<Front>): Promise<Front[]> {
+        return await this.frontRepository.find(certification)
+    }
+
+    async search(query: string,page:number,limit:number): Promise<Front[]> {
+        const searchQuery = `%${query}%`
+        return await this.frontRepository.find({
+            where : {
+                name : Like(searchQuery)
+            },
+            take : limit,
+            skip : (page -1)* limit
+            
+        })
     }
 
 }

@@ -1,5 +1,4 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
-import MenuRoletRl from 'src/role/entities/menuRoleRl.entity';
 import  MenuFrontRl from 'src/menu/entities/menuFrontRl.enity';
 import { Module } from '@nestjs/common';
 import { MenuService } from './menu.service';
@@ -10,11 +9,13 @@ import { FrontRepository } from 'src/front/front.repository';
 import Front from 'src/front/entities/front.entity';
 import { MenuFrontRepository } from './menuFront.repository';
 import { FrontModule } from 'src/front/front.module';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl]),FrontModule],
+  imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl]),AuthModule,FrontModule],
   controllers: [MenuController],
-  providers: [MenuService,MenuRepository,FrontRepository,MenuFrontRepository],
+  providers: [MenuService,MenuRepository,FrontRepository,MenuFrontRepository,JwtGuard],
   exports : [MenuRepository,MenuFrontRepository]
 })
 export class MenuModule {}

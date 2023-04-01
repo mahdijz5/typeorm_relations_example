@@ -3,9 +3,7 @@ import { UpdateRoleParams } from './../utils/types';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { RoleRepository } from './role.repository';
 import { CreateRoleParams } from 'src/utils/types';
-import { UserRoleRepository } from 'src/user/user.role.repository';
 import Role from './entities/role.entity';
-import { UpdateResult } from 'typeorm';
 import { MenuRepository } from 'src/menu/menu.repository';
 
 @Injectable()

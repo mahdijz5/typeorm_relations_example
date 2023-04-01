@@ -1,7 +1,7 @@
 import { RoleModule } from './../role/role.module';
 import { RoleRepository } from './../role/role.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Module } from '@nestjs/common';
+import { Module,forwardRef } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
@@ -12,10 +12,10 @@ import { UserRepository } from './user.repository';
 import { UserRoleRepository } from './user.role.repository';
 import { UserRoleRl } from './entities/userRoleRl.entity';
 import Role from 'src/role/entities/role.entity';
-import { MenuRepository } from 'src/menu/menu.repository';
 import { MenuModule } from 'src/menu/menu.module';
 import Menu from 'src/menu/entities/menu.entity';
 import { FrontModule } from 'src/front/front.module';
+import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User,Role,UserRoleRl,Menu]) , JwtModule.register({
@@ -23,12 +23,12 @@ import { FrontModule } from 'src/front/front.module';
     signOptions: {
       expiresIn: "1d"
     }
-  }), AuthModule,RoleModule,MenuModule,FrontModule],
+  }),RoleModule,MenuModule,FrontModule,forwardRef(() => AuthModule)],
   controllers: [UserController],
   providers: [{
     provide : ProvidersEnum.uesrService,
     useClass : UserService
-  },RoleRepository,UserRepository,UserRoleRepository],
+  },RoleRepository,UserRepository,UserRoleRepository,JwtGuard],
   exports : [UserRepository,UserRoleRepository]
 })
 export class UserModule {}

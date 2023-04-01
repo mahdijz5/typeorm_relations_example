@@ -2,36 +2,16 @@ import { RoleRepository } from 'src/role/role.repository';
 import { isEmpty } from './../utils/tools';
 import { UserRoleRepository } from 'src/user/user.role.repository';
 import { BadRequestException } from '@nestjs/common';
-import { DeepPartial, FindOneOptions, FindOptionsWhere, FindOptionsWhereProperty, Like, Repository } from 'typeorm';
+import { DeepPartial, FindOneOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
-import { RoleEnum } from 'src/utils/enums';
 import { UserRoleRl } from './entities/userRoleRl.entity';
 
 @Injectable()
 export class UserRepository {
     constructor(@InjectRepository(User) private userRepository: Repository<User>, private userRoleRepository: UserRoleRepository,private roleRepository :RoleRepository) { }
 
-    create(data: DeepPartial<User>) {
-        const user = this.userRepository.create(data)
-        return user
-    }
-
-    async findOneBy(certificate: FindOptionsWhere<User>) {
-        return await this.userRepository.findOneBy(certificate)
-    }
-
-    async findOne(certificate: FindOneOptions<User>) {
-        return await this.userRepository.findOne(certificate)
-    }
-
-    async updatePassword(certificate: object, password: string) {
-        const user = await this.userRepository.findOneBy(certificate)
-        user.password = password
-        return await this.userRepository.save(user)
-    }
 
     async provideRelationForUser(userId : number): Promise<{user: User , userRole : UserRoleRl}> {
         try {
@@ -99,11 +79,34 @@ export class UserRepository {
         })
     }
 
-    async remove(user: User) {
+
+    //! BASICS 
+
+    async remove(user: User): Promise<User> {
         return await this.userRepository.remove(user)
     }
 
-    async save(user: User) {
+    async save(user: User): Promise<User> {
+        return await this.userRepository.save(user)
+    }
+
+    
+    create(data: DeepPartial<User>):User {
+        const user = this.userRepository.create(data)
+        return user
+    }
+
+    async findOneBy(certificate: FindOptionsWhere<User>): Promise<User> {
+        return await this.userRepository.findOneBy(certificate)
+    }
+
+    async findOne(certificate: FindOneOptions<User>): Promise<User> {
+        return await this.userRepository.findOne(certificate)
+    }
+
+    async updatePassword(certificate: object, password: string): Promise<User> {
+        const user = await this.userRepository.findOneBy(certificate)
+        user.password = password
         return await this.userRepository.save(user)
     }
 
