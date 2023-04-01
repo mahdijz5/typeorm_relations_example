@@ -1,3 +1,4 @@
+import { FrontRepository } from 'src/front/front.repository';
 import { UpdateRoleParams } from './../utils/types';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { RoleRepository } from './role.repository';
@@ -5,10 +6,11 @@ import { CreateRoleParams } from 'src/utils/types';
 import { UserRoleRepository } from 'src/user/user.role.repository';
 import Role from './entities/role.entity';
 import { UpdateResult } from 'typeorm';
+import { MenuRepository } from 'src/menu/menu.repository';
 
 @Injectable()
 export class RoleService {
-    constructor(private roleRepository : RoleRepository) {}
+    constructor(private roleRepository : RoleRepository,private menuRepository : MenuRepository,private frontRepository:FrontRepository) {}
 
     async create(data : CreateRoleParams) : Promise<Role> {
         try {
@@ -43,6 +45,29 @@ export class RoleService {
     async find(limit: number, page: number, searchQuery :string) {
         try {
             return await this.roleRepository.search(limit,page,searchQuery)
+        } catch (error) {
+            throw error
+        }
+    }
+    
+
+    async getMenus(id :number) {
+        try {
+            return await this.menuRepository.getMenuOfInTreeForm([id])
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getFronts(id :number) {
+        try {
+            const menus = await this.menuRepository.getMenuOf([id])
+            const menuIdList = []
+
+            for (const menu of menus) menuIdList.push(menu.id)
+
+            return await this.frontRepository.getFrontOf(menuIdList)
+
         } catch (error) {
             throw error
         }

@@ -13,7 +13,7 @@ export class UserRoleRl {
     @JoinColumn()
     user? : User
 
-    @ManyToMany(() => Role)
+    @ManyToMany(() => Role,(role) => role.userRoleRl)
     @JoinTable()
     roles : Role[]            
 }

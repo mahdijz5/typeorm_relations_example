@@ -13,7 +13,7 @@ export default class MenuFrontRl {
     @JoinColumn()
     menu : Menu
     
-    @ManyToMany(() => Front )
+    @ManyToMany(() => Front,(front) => front.menuFrontRl )
     @JoinTable()
     fronts : Front[]           
 }

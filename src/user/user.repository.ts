@@ -2,7 +2,7 @@ import { RoleRepository } from 'src/role/role.repository';
 import { isEmpty } from './../utils/tools';
 import { UserRoleRepository } from 'src/user/user.role.repository';
 import { BadRequestException } from '@nestjs/common';
-import { DeepPartial, FindOneOptions, FindOptionsWhere, FindOptionsWhereProperty, Repository } from 'typeorm';
+import { DeepPartial, FindOneOptions, FindOptionsWhere, FindOptionsWhereProperty, Like, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ApiTags } from '@nestjs/swagger';
@@ -85,6 +85,19 @@ export class UserRepository {
     }
 
 
+    async search(limit: number, page: number, searchQuery: string): Promise<User[]> {
+        const query = `%${searchQuery}%`
+        return await this.userRepository.find({
+            where: { username: Like(query) },
+            relations: {
+                userRoleRl: {
+                    roles: true
+                }
+            },
+            take: limit,
+            skip: (page - 1) * limit
+        })
+    }
 
     async remove(user: User) {
         return await this.userRepository.remove(user)

@@ -1,9 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
-import { isEmpty } from './../utils/tools';
+import { isAdmin, isEmpty } from './../utils/tools';
 import { UserData } from './../decorators/userData.decorator';
 import { JwtGuard } from './../auth/guards/jwt.guard';
 import { UserService } from './user.service';
-import {Query, Inject, Controller, Get, Param, ParseIntPipe, UseGuards, Post, Body, Req, Put, Delete, Res } from '@nestjs/common';
+import {ForbiddenException,Query, Inject, Controller, Get, Param, ParseIntPipe, UseGuards, Post, Body, Req, Put, Delete, Res } from '@nestjs/common';
 import { ApiCreatedResponse, ApiNotFoundResponse, ApiTags, ApiOkResponse, ApiBadRequestResponse, ApiUnauthorizedResponse, ApiBearerAuth, ApiOperation, ApiForbiddenResponse, ApiQuery } from '@nestjs/swagger';
 import {  UpdateUserByAdminDto, UpdateUserDto } from './dto';
 import { ProvidersEnum, RoleEnum } from '../utils/enums';
@@ -12,6 +12,7 @@ import { Roles } from 'src/decorators/role.decorator';
 import { UpdateRoleDto } from 'src/role/dto/updateRole.dto';
 import { Response } from 'express';
 import Role from 'src/role/entities/role.entity';
+import { RolesGuard } from 'src/auth/guards/role.guard';
 
 
 @ApiTags("User")
@@ -33,12 +34,12 @@ export class UserController {
         }
     }
 
+    @Roles(RoleEnum.admin)
     @ApiOperation({ summary: 'Edit User and you can set roles here  : (Should be admin)' })
     @ApiBadRequestResponse({ description: "User doesnt exist" })
     @ApiOkResponse({ description: 'User has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
     @Put("edit-by-admin/:id")
-    @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async updateUserByAdmin(@Body() body : UpdateUserByAdminDto,@Param('id') id: number,@Res() res : Response) {
         try {
@@ -75,7 +76,6 @@ export class UserController {
     @UseGuards(JwtGuard)
     async removeRole(@Param('id') id: number,@Res() res : Response) {
         try {
-            // await this.userService.remove(id)
             res.status(200).json({message :"User has beed deleted."})
         } catch (error) {
             throw error
@@ -83,18 +83,61 @@ export class UserController {
     }
 
     @ApiOkResponse()
+    @ApiForbiddenResponse()
     @ApiQuery({ name: "limit", type: Number,required : false })
     @ApiQuery({ name: "page", type: Number,required : false })
     @ApiQuery({ name: "search", type: String,required : false })
-    @Get("find")
     @Roles(RoleEnum.admin)
+    @Get("find")
     @UseGuards(JwtGuard)
     async search(@Query() query: { limit: number, page: number,search : string }) {
         const limit = query.limit || 10
         const page = query.page || 1
         const search = query.search || ""
         try {
-            // return await this.userService.find(limit, page, search)
+            return await this.userService.find(limit, page, search)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: "get user's roles" })
+    @ApiOkResponse({ description: 'User has been removed.' })
+    @ApiForbiddenResponse({ description: "Your not admin" })
+    @Get("roles/:id")
+    @UseGuards(JwtGuard)
+    async getRoles(@Param('id') id: number,@Res() res : Response,@UserData() user : UserDataInterface) {
+        try {
+            if(user.id !== id && !isAdmin(user)) throw new ForbiddenException()
+            res.status(200).json(await this.userService.getRoles([id]))
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: "get user's menus" })
+    @ApiOkResponse({ description: 'User has been removed.' })
+    @ApiForbiddenResponse({ description: "Your not admin" })
+    @Get("menus/:id")
+    @UseGuards(JwtGuard)
+    async getMenus(@Param('id') id: number,@Res() res : Response,@UserData() user : UserDataInterface) {
+        try {
+            if(user.id !== id && !isAdmin(user)) throw new ForbiddenException()
+            res.status(200).json(await this.userService.getMenus([id]))
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: "get user's fronts" })
+    @ApiOkResponse({ description: 'User has been removed.' })
+    @ApiForbiddenResponse({ description: "Your not admin" })
+    @Get("fronts/:id")
+    @UseGuards(JwtGuard)
+    async getFronts(@Param('id') id: number,@Res() res : Response,@UserData() user : UserDataInterface) {
+        try {
+            if(user.id !== id && !isAdmin(user)) throw new ForbiddenException()
+            res.status(200).json(await this.userService.getFronts([id]))
         } catch (error) {
             throw error
         }

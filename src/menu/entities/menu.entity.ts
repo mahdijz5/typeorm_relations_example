@@ -1,4 +1,4 @@
-import {Tree,TreeChildren,TreeParent, Column, Entity, ManyToMany, PrimaryGeneratedColumn, OneToOne, BeforeInsert, BeforeUpdate } from "typeorm";
+import {Tree,TreeChildren,TreeParent, Column, Entity, ManyToMany, PrimaryGeneratedColumn, OneToOne, BeforeInsert, BeforeUpdate, JoinTable } from "typeorm";
 import MenuFrontRl from './menuFrontRl.enity';
 import MenuRoletRl from '../../role/entities/menuRoleRl.entity';
 
@@ -29,7 +29,8 @@ export default class Menu {
     @OneToOne(() => MenuFrontRl,(menuFrontRl) => menuFrontRl.menu)
     menuFrontRl : MenuFrontRl
 
-    @ManyToMany(() => MenuRoletRl)
+    @ManyToMany(() => MenuRoletRl,(menuRole) => menuRole.menus)
+    // @JoinTable()
     menuRoleRl : MenuRoletRl[]
 
     @BeforeInsert()

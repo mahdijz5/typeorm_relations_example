@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import {  DeepPartial, DeleteResult, FindOneOptions, FindOptionsWhere, In, Like, Repository, UpdateResult } from "typeorm";
+import {  Any, DeepPartial, DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, In, Like, Repository, UpdateResult } from "typeorm";
 import Role from "./entities/role.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MenuRoleRepository } from './menuRole.repository';
@@ -51,7 +51,6 @@ export class RoleRepository {
                 where : { id : userId },
                 relations : {menuRoleRl:{
                     menus : true
-
                 }}
             })
             if (!role) throw new BadRequestException("User doesn't exist")
@@ -84,8 +83,31 @@ export class RoleRepository {
         return await this.roleRepository.findOneBy(certification)
     }
 
+    async find(certification:FindManyOptions<Role>) : Promise<Role[]> {
+        return await this.roleRepository.find(certification)
+    }
+
     async findOne(certification:FindOneOptions<Role>) : Promise<Role> {
         return await this.roleRepository.findOne(certification)
+    }
+
+    async getRoleOf(id:number[]):Promise<Role[]>{
+        try {
+            return await this.find({
+                where : {
+                    userRoleRl : {
+                        user : {
+                            id : Any([...id])
+                        }
+                    }
+                },
+                relations : {userRoleRl:{
+                    user : true
+                }}
+            })
+        } catch (error) {
+            throw error
+        }
     }
 
     async search(limit:number,page : number ,searchQuery : string): Promise<Role[]> {

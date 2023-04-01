@@ -15,6 +15,6 @@ export default class Front {
     @Column({length : 400})
     description : string
 
-    @ManyToMany(() => MenuFrontRl)
+    @ManyToMany(() => MenuFrontRl,(menuFront) => menuFront.fronts)
     menuFrontRl : MenuFrontRl[]
 } 
