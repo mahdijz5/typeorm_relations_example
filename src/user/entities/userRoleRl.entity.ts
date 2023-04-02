@@ -1,5 +1,5 @@
 import Role from '../../role/entities/role.entity';
-import { Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeRemove, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn, } from "typeorm";
 import { User } from './user.entity';
 
 @Entity()
@@ -15,5 +15,6 @@ export class UserRoleRl {
 
     @ManyToMany(() => Role,(role) => role.userRoleRl)
     @JoinTable()
-    roles : Role[]            
-}
+    roles : Role[]    
+            
+} 

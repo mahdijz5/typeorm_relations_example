@@ -22,18 +22,7 @@ export class UserController {
     constructor(@Inject(ProvidersEnum.uesrService) private userService : UserService) {}
 
 
-    @ApiOperation({ summary: "Get user by id" })
-    @ApiOkResponse()
-    @ApiNotFoundResponse({ description: "User doesnt exist." })
-    @Roles(RoleEnum.admin)
-    @Get(":id")
-    async getUser(@Param("id", ParseIntPipe) id: number) {
-        try {
-            return await this.userService.getUser(id)
-        } catch (error) {
-            throw error
-        }
-    }
+    
 
     @Roles(RoleEnum.admin)
     @ApiOperation({ summary: 'Edit User and you can set roles here  : (Should be admin)' })
@@ -68,6 +57,39 @@ export class UserController {
         }
     }
 
+    @ApiOkResponse()
+    @ApiForbiddenResponse()
+    @ApiQuery({ name: "limit", type: Number,required : false })
+    @ApiQuery({ name: "page", type: Number,required : false })
+    @ApiQuery({ name: "search", type: String,required : false })
+    @UseGuards(JwtGuard)
+    @Get("/search")
+    async search(@Query() query: { limit: number, page: number,search : string }) {
+        console.log(2)
+        const limit = query.limit || 10
+        const page = query.page || 1
+        const search = query.search || ""
+        try {
+            return await this.userService.find(limit, page, search)
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: "Get user by id" })
+    @ApiOkResponse()
+    @ApiNotFoundResponse({ description: "User doesnt exist." })
+    @Roles(RoleEnum.admin)
+    @Get(":id")
+    async getUser(@Param("id", ParseIntPipe) id: number) {
+        try {
+            return await this.userService.getUser(id)
+        } catch (error) {
+            throw error
+        }
+    }
+
     @ApiOperation({ summary: 'Remove role' })
     @ApiBadRequestResponse({ description: "User doesnt exist" })
     @ApiOkResponse({ description: 'User has been removed.' })
@@ -77,26 +99,8 @@ export class UserController {
     @UseGuards(JwtGuard)
     async removeRole(@Param('id') id: number,@Res() res : Response) {
         try {
+            await this.userService.delete(id)
             res.status(200).json({message :"User has beed deleted."})
-        } catch (error) {
-            throw error
-        }
-    }
-
-    @ApiOkResponse()
-    @ApiForbiddenResponse()
-    @ApiQuery({ name: "limit", type: Number,required : false })
-    @ApiQuery({ name: "page", type: Number,required : false })
-    @ApiQuery({ name: "search", type: String,required : false })
-    @Roles(RoleEnum.admin)
-    @Get("find")
-    @UseGuards(JwtGuard)
-    async search(@Query() query: { limit: number, page: number,search : string }) {
-        const limit = query.limit || 10
-        const page = query.page || 1
-        const search = query.search || ""
-        try {
-            return await this.userService.find(limit, page, search)
         } catch (error) {
             throw error
         }

@@ -54,6 +54,14 @@ export class UserService {
         }
     }
 
+    async delete( id: number) {
+        try {
+            await this.userRepository.remove(id)
+        } catch (error) {
+            throw error
+        }
+    }
+
     async find(limit:number,page:number,searchQuery:string) {
             try {
                 return this.userRepository.search(limit,page,searchQuery)

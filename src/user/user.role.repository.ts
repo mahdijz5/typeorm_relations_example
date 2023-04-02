@@ -1,6 +1,6 @@
 import Role from 'src/role/entities/role.entity';
-import { ArrayContainedBy, ArrayContains, DeepPartial, FindOptionsWhere, In, Repository } from 'typeorm';
-import {BadRequestException, Injectable } from '@nestjs/common';
+import { ArrayContainedBy, ArrayContains, DeepPartial, DeleteResult, FindOptionsWhere, In, Repository } from 'typeorm';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRoleRl } from './entities/userRoleRl.entity';
 import { RoleRepository } from 'src/role/role.repository';
@@ -10,7 +10,7 @@ import { isEmpty } from 'class-validator';
 
 @Injectable()
 export class UserRoleRepository {
-    constructor(@InjectRepository(UserRoleRl) private userRoleRepository: Repository<UserRoleRl>, private roleRepository: RoleRepository, ) { }
+    constructor(@InjectRepository(UserRoleRl) private userRoleRepository: Repository<UserRoleRl>, private roleRepository: RoleRepository,) { }
 
     create(data: DeepPartial<UserRoleRl>) {
         return this.userRoleRepository.create(data)
@@ -18,6 +18,10 @@ export class UserRoleRepository {
 
     async save(userRole: UserRoleRl) {
         return await this.userRoleRepository.save(userRole)
+    }
+
+    async remove(id:number) :Promise<DeleteResult> {
+        return await this.userRoleRepository.delete({ id })
     }
 
     async JoinUserAndRole(user: User, roles?: Role[]): Promise<UserRoleRl> {

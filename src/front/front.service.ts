@@ -6,31 +6,31 @@ import Front from './entities/front.entity';
 
 @Injectable()
 export class FrontService {
-    constructor(private roleRepository : FrontRepository) {}
+    constructor(private roleRepository: FrontRepository) { }
 
-    async create(data : CreateFrontDto) : Promise<Front> {
+    async create(data: CreateFrontDto): Promise<Front> {
         try {
-            const isExist = await this.roleRepository.findOneBy({name : data.name})
-            if(isExist) throw new BadRequestException('Front already exists')
-            const front = this.roleRepository.create({...data})
+            const isExist = await this.roleRepository.findOneBy({ name: data.name })
+            if (isExist) throw new BadRequestException('Front already exists')
+            const front = this.roleRepository.create({ ...data })
 
             await this.roleRepository.save(front)
-            
+
             return front
         } catch (error) {
             throw error
         }
     }
 
-    async update(data : UpdateFrontDto,id:number)  {
+    async update(data: UpdateFrontDto, id: number) {
         try {
-            await this.roleRepository.update(data,id)
+            await this.roleRepository.update(data, id)
         } catch (error) {
             throw error
         }
     }
 
-    async remove(id:number)  {
+    async remove(id: number) {
         try {
             await this.roleRepository.remove(id)
         } catch (error) {
@@ -38,10 +38,10 @@ export class FrontService {
         }
     }
 
-    async find(limit: number, page: number, searchQuery :string) {
+    async find(limit: number, page: number, searchQuery: string) {
         const query = `%${searchQuery}%`
         try {
-            const queryBuilder = this.roleRepository.search(query,page,limit)
+            return await this.roleRepository.search(query, page, limit)
         } catch (error) {
             throw error
         }

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import {  DeepPartial, Repository } from "typeorm";
+import {  DeepPartial, DeleteResult, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import MenuRoleRl from './entities/menuRoleRl.entity';
 
@@ -14,6 +14,10 @@ export class MenuRoleRepository {
 
     async save(menuRole: MenuRoleRl) {
         return await this.menuRoleRepository.save(menuRole)
+    }
+
+    async remove(id: number):Promise<DeleteResult> {
+        return await this.menuRoleRepository.delete({id})
     }
  
 

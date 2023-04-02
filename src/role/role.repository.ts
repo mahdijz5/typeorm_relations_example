@@ -104,10 +104,14 @@ export class RoleRepository {
 
     // ! BASICS
     
-    async remove(id:number) : Promise<DeleteResult> {
-        const result = await this.roleRepository.delete({id})
-        if(result.affected === 0) {throw new BadRequestException("Role doesn't exist")}
-        return result
+    async remove(id:number) : Promise<Role> {
+        const role =await this.findOne({
+            where : {id},
+            relations  :{menuRoleRl : true}
+        })
+        if(!role) {throw new BadRequestException("Role doesn't exist")}
+        await this.menuRoleRepository.remove(role.menuRoleRl.id)
+        return await this.roleRepository.remove(role)
     }
 
     async save(role:Role) {

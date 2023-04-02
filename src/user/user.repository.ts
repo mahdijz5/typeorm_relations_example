@@ -42,7 +42,7 @@ export class UserRepository {
     async updateUser(certification : FindOptionsWhere<User>,data : DeepPartial<User>): Promise<{affected?: number}> {
         if(isEmpty(data.email) && isEmpty(data.username)) return {affected : 0}
 
-        const isExist = await this.userRepository.findOneBy({ username: data.username || "" })
+        const isExist = await this.userRepository.findOneBy({ email: data.email || "" })
         if (isExist) throw new BadRequestException("User already exists")
 
         return await this.userRepository.update(certification,data)
@@ -82,7 +82,13 @@ export class UserRepository {
 
     //! BASICS 
 
-    async remove(user: User): Promise<User> {
+    async remove(id: number): Promise<User> {
+        const user =await this.findOne({
+            where : {id}, 
+            relations : {userRoleRl : true}
+        })
+        if(!user) throw new BadRequestException("User doesn't exist")
+        await this.userRoleRepository.remove(user.userRoleRl.id)
         return await this.userRepository.remove(user)
     }
 
