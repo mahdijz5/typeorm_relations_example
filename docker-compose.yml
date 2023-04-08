@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+    api:
+        image: test-image 
+        build:
+            dockerfile: Dockerfile
+            context: .
+        depends_on: 
+            - postgres
+        environment: 
+            DATABASE_URL: postgres://postgres:root@postgres:5432/role_based_auth
+            NODE_ENV: development
+            ACCESS_TOKRN_SECRET: 6b0c2sdg$%
+            REFRESH_TOKEN_SECRET: 6b0c2e9ada&*^@D
+            RESET_PASSWORD_TOKEN_SECRET: s@S?>123ge
+            SERVER_HOST: localhost
+            SERVER_URL: http://localhost:3000
+            SERVER_PORT: 3000
+            DB_TYPE: postgres
+            DB_PORT: 5432
+            DB_USERNAME: postgres
+            DB_PASSWORD: root
+            DB_NAME: role_based_auth
+            PORT: 3000
+        ports:
+            - "8080:3000"
+
+    postgres:
+        image: postgres
+        ports:
+            - "35000:5432"
+        environment: 
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: root
+            POSTGRES_DB: role_based_auth

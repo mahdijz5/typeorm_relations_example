@@ -18,7 +18,6 @@ import Menu from './menu/entities/menu.entity';
 import MenuRoletRl from './role/entities/menuRoleRl.entity';
 import { RolesGuard } from './auth/guards/role.guard';
 
-
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
