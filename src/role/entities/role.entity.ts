@@ -17,7 +17,7 @@ export default class Role {
     })
     name : string
 
-    @ManyToMany(() => UserRoleRl)
+    @ManyToMany(() => UserRoleRl,(userRole)=> userRole.roles )
     userRoleRl : UserRoleRl[]
 
     @OneToOne(() => MenuRoleRl,(menuRoleRl) => menuRoleRl.role)

@@ -17,9 +17,9 @@ export class FrontController {
     @ApiBadRequestResponse({ description: "Front is already exist" })
     @ApiCreatedResponse({ description: 'Front has been created.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Post()
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
+    @Post()
     async create(@Body() body : CreateFrontDto, ) {
         try {
             return await this.frontService.create(body)
@@ -32,9 +32,9 @@ export class FrontController {
     @ApiNotFoundResponse({ description: "Front doesnt exist" })
     @ApiOkResponse({ description: 'Front has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Put("edit:id")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
+    @Put("edit/:id")
     async updateFront(@Body() body : UpdateFrontDto,@Param('id') id: number,@Res() res : Response) {
         try {
             await this.frontService.update(body,id)
@@ -48,9 +48,9 @@ export class FrontController {
     @ApiBadRequestResponse({ description: "Front doesnt exist" })
     @ApiOkResponse({ description: 'Front has been removed.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Delete("remove:id")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
+    @Delete("remove/:id")
     async removeFront(@Param('id') id: number,@Res() res : Response) {
         try {
             await this.frontService.remove(id)
@@ -61,12 +61,13 @@ export class FrontController {
     }
 
     @ApiOkResponse()
+    @ApiForbiddenResponse({ description: "Your not admin" })
     @ApiQuery({ name: "limit", type: Number,required : false })
     @ApiQuery({ name: "page", type: Number,required : false })
     @ApiQuery({ name: "search", type: String,required : false })
-    @Get("find")
     @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
+    @Get("find")
     async search(@Query() query: { limit: number, page: number,search : string }) {
         const limit = query.limit || 10
         const page = query.page || 1

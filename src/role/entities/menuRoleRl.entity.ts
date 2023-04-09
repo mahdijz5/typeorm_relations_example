@@ -14,7 +14,7 @@ export default class MenuRoleRl {
     @JoinColumn()
     role : Role           
     
-    @ManyToMany(() => Menu)
+    @ManyToMany(() => Menu,(menu) => menu.menuRoleRl)
     @JoinTable()
     menus : Menu[]
 }

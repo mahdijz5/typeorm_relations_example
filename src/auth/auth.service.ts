@@ -105,7 +105,6 @@ export class AuthService {
             if(body.password !== body.confirmPassword) {throw new UnauthorizedException()}
             return await this.userRepository.updatePassword({id : decodedToken.id}, body.password)
         } catch (error) {
-            console.log(error)
             throw new UnauthorizedException()
         }
     }

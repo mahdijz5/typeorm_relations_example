@@ -18,10 +18,6 @@ import Menu from './menu/entities/menu.entity';
 import MenuRoletRl from './role/entities/menuRoleRl.entity';
 import { RolesGuard } from './auth/guards/role.guard';
 
-const rootDir = process.env.NODE_ENV === 'dist'
-    ? 'dist'
-    : 'src';
-
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
@@ -33,7 +29,7 @@ const rootDir = process.env.NODE_ENV === 'dist'
       database: process.env.DB_NAME,
       entities: [User,Role,Menu,MenuFrontRl,FrontModule,Front,MenuRoletRl,UserRoleRl],
       synchronize: true,
-    }),UserModule, MenuModule, FrontModule, RoleModule, AuthModule],
+    }),AuthModule,UserModule, MenuModule, FrontModule, RoleModule],
   controllers: [AppController],
   providers: [AppService,{
     provide: APP_GUARD,

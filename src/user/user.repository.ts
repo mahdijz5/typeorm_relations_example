@@ -1,41 +1,118 @@
-import { FindOneOptions, FindOptionsWhere, FindOptionsWhereProperty, Repository } from 'typeorm';
+import { RoleRepository } from 'src/role/role.repository';
+import { isEmpty } from './../utils/tools';
+import { UserRoleRepository } from 'src/user/user.role.repository';
+import { BadRequestException } from '@nestjs/common';
+import { DeepPartial, FindOneOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApiTags } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
+import { UserRoleRl } from './entities/userRoleRl.entity';
 
 @Injectable()
 export class UserRepository {
-    constructor(@InjectRepository(User) private userRepository: Repository<User>,) { }
+    constructor(@InjectRepository(User) private userRepository: Repository<User>, private userRoleRepository: UserRoleRepository,private roleRepository :RoleRepository) { }
 
-    create(data : object) {
-        const user =  this.userRepository.create(data)
-        return user
+
+    async provideRelationForUser(userId : number): Promise<{user: User , userRole : UserRoleRl}> {
+        try {
+            let userRole:UserRoleRl;
+            const user = await this.findOne({
+                where : { id : userId },
+                relations : {userRoleRl:{
+                    roles : true
+
+                }}
+            })
+            if (!user) throw new BadRequestException("User doesn't exist")
+
+            if(isEmpty(user.userRoleRl)) {
+                userRole = this.userRoleRepository.create({})
+                userRole.user = user
+                this.userRoleRepository.save(userRole)
+            }else {
+                userRole = user.userRoleRl
+            } 
+
+            return {userRole, user}
+        } catch (error) {
+            throw error
+        }
     }
 
-    async findOneBy(certificate: object) {
-        return await this.userRepository.findOneBy(certificate)
+    async updateUser(certification : FindOptionsWhere<User>,data : DeepPartial<User>): Promise<{affected?: number}> {
+        if(isEmpty(data.email) && isEmpty(data.username)) return {affected : 0}
+
+        const isExist = await this.userRepository.findOneBy({ email: data.email || "" })
+        if (isExist) throw new BadRequestException("User already exists")
+
+        return await this.userRepository.update(certification,data)
     }
 
-    async findOne(certificate: FindOneOptions<User>) {
-        return await this.userRepository.findOne(certificate)
+    async updateByAdmin(data: DeepPartial<User>, id: number, rolesId: number[] = []) {
+        try {
+            const {user,userRole} =await this.provideRelationForUser(id)
+            await this.updateUser({id},data)
+
+            if (rolesId.length > 0) {
+                userRole.roles = [...await this.roleRepository.findByListOfId(rolesId)]
+                this.userRoleRepository.save(userRole)
+            }
+
+            return user
+        } catch (error) {
+            throw error
+        }
     }
 
-    async update(certificate :object,data : object) {
-        return  await this.userRepository.update(certificate, data)
+
+    async search(limit: number, page: number, searchQuery: string): Promise<User[]> {
+        const query = `%${searchQuery}%`
+        return await this.userRepository.find({
+            where: { username: Like(query) },
+            relations: {
+                userRoleRl: {
+                    roles: true
+                }
+            },
+            take: limit,
+            skip: (page - 1) * limit
+        })
     }
 
-    async updatePassword(certificate :object,password :string) {
-        const user = await this.userRepository.findOneBy(certificate)
-        user.password = password
-        return await this.userRepository.save(user) 
-    }
 
-    async remove(user: User) {
+    //! BASICS 
+
+    async remove(id: number): Promise<User> {
+        const user =await this.findOne({
+            where : {id}, 
+            relations : {userRoleRl : true}
+        })
+        if(!user) throw new BadRequestException("User doesn't exist")
+        await this.userRoleRepository.remove(user.userRoleRl.id)
         return await this.userRepository.remove(user)
     }
 
-    async save(user : User) {
+    async save(user: User): Promise<User> {
+        return await this.userRepository.save(user)
+    }
+
+    
+    create(data: DeepPartial<User>):User {
+        const user = this.userRepository.create(data)
+        return user
+    }
+
+    async findOneBy(certificate: FindOptionsWhere<User>): Promise<User> {
+        return await this.userRepository.findOneBy(certificate)
+    }
+
+    async findOne(certificate: FindOneOptions<User>): Promise<User> {
+        return await this.userRepository.findOne(certificate)
+    }
+
+    async updatePassword(certificate: object, password: string): Promise<User> {
+        const user = await this.userRepository.findOneBy(certificate)
+        user.password = password
         return await this.userRepository.save(user)
     }
 

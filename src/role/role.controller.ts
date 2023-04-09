@@ -11,6 +11,7 @@ import { Response } from 'express';
 @ApiTags("Role (Should be admin)")
 @ApiBearerAuth()
 @Controller('role')
+@Roles(RoleEnum.admin)
 export class RoleController {
     constructor(private roleService : RoleService) {}
 
@@ -19,7 +20,6 @@ export class RoleController {
     @ApiCreatedResponse({ description: 'Role has been created.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
     @Post()
-    @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async create(@Body() body : CreateRoleDto, ) {
         try {
@@ -33,13 +33,12 @@ export class RoleController {
     @ApiNotFoundResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Role has been updated.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Put("edit:id")
-    @Roles(RoleEnum.admin)
+    @Put("edit/:id")
     @UseGuards(JwtGuard)
     async updateRole(@Body() body : UpdateRoleDto,@Param('id') id: number,@Res() res : Response) {
         try {
             await this.roleService.update(body,id)
-            res.status(200).json({"message" : "User has been updated"})
+            res.status(200).json({"message" : "Role has been updated"})
         } catch (error) {
             throw error
         }
@@ -49,8 +48,7 @@ export class RoleController {
     @ApiBadRequestResponse({ description: "Role doesnt exist" })
     @ApiOkResponse({ description: 'Role has been removed.' })
     @ApiForbiddenResponse({ description: "Your not admin" })
-    @Delete("remove:id")
-    @Roles(RoleEnum.admin)
+    @Delete("remove/:id")
     @UseGuards(JwtGuard)
     async removeRole(@Param('id') id: number,@Res() res : Response) {
         try {
@@ -61,12 +59,12 @@ export class RoleController {
         }
     }
 
+    @ApiOperation({ summary: 'Searching role' })
     @ApiOkResponse()
     @ApiQuery({ name: "limit", type: Number,required : false })
     @ApiQuery({ name: "page", type: Number,required : false })
     @ApiQuery({ name: "search", type: String,required : false })
     @Get("find")
-    @Roles(RoleEnum.admin)
     @UseGuards(JwtGuard)
     async search(@Query() query: { limit: number, page: number,search : string }) {
         const limit = query.limit || 10
@@ -74,6 +72,30 @@ export class RoleController {
         const search = query.search || ""
         try {
             return await this.roleService.find(limit, page, search)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: 'get menus of role with thier children' })
+    @ApiOkResponse()
+    @Get("menus/:id")
+    @UseGuards(JwtGuard)
+    async getMenus(@Param('id') id : number) {
+        try {
+            return await this.roleService.getMenus(id)
+        } catch (error) {
+            throw error
+        }
+    }
+
+    @ApiOperation({ summary: 'get fronts of role with thier children' })
+    @ApiOkResponse()
+    @Get("fronts/:id")
+    @UseGuards(JwtGuard)
+    async getFronts(@Param('id') id : number) {
+        try {
+            return await this.roleService.getFronts(id)
         } catch (error) {
             throw error
         }

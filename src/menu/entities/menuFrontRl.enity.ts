@@ -11,9 +11,9 @@ export default class MenuFrontRl {
 
     @OneToOne(() => Menu,(menu) => menu.menuFrontRl)
     @JoinColumn()
-    front : Front           
+    menu : Menu
     
-    @ManyToMany(() => Menu)
+    @ManyToMany(() => Front,(front) => front.menuFrontRl )
     @JoinTable()
-    menus : Menu[]
+    fronts : Front[]           
 }
