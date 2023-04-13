@@ -9,8 +9,9 @@
 
 ## Description
 
-This is good example for understanding relations.
-This project contains all type of relations beside tree structure and junction table 
+> This is good example for understanding relations.
+> <br>
+> This project contains all type of relations beside **tree structure** and **junction table** 
 
 
 
