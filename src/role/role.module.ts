@@ -19,7 +19,7 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
 @Module({ 
   imports :[TypeOrmModule.forFeature([Role,MenuRoleRl,Menu,Front]),MenuModule,FrontModule,forwardRef(() => AuthModule)],
   controllers: [RoleController],
-  providers: [RoleService,RoleRepository,MenuRoleRepository,MenuRepository,FrontRepository,JwtGuard],
+  providers: [RoleService,RoleRepository,MenuRoleRepository],
   exports : [RoleRepository,MenuRoleRepository]
 })
 export class RoleModule {}

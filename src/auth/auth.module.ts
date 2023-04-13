@@ -25,7 +25,7 @@ import { RoleModule } from 'src/role/role.module';
       expiresIn: "1d"
     }
   }),],
-  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,RolesGuard,UserRepository,UserRoleRepository],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtGuard,RolesGuard],
   controllers: [AuthController],
   exports: [JwtStrategy,JwtGuard,RolesGuard]
 })

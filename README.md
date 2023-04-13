@@ -25,10 +25,10 @@ $ npm install
 
 ```bash
 # to create tables
-$ npm run start:dev
+$ npm run start
 
 # to seed data
-$ npm run seed
+$ npm run seed:run
 
 # to start development mode
 $ npm run start:dev
