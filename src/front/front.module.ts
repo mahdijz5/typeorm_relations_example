@@ -10,7 +10,7 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   imports :[TypeOrmModule.forFeature([Front]),AuthModule],
   controllers: [FrontController],
-  providers: [FrontService,FrontRepository,JwtGuard],
+  providers: [FrontService,FrontRepository],
   exports : [FrontRepository]
 })
 export class FrontModule {}

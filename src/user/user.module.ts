@@ -28,7 +28,7 @@ import { JwtGuard } from 'src/auth/guards/jwt.guard';
   providers: [{
     provide : ProvidersEnum.uesrService,
     useClass : UserService
-  },RoleRepository,UserRepository,UserRoleRepository,JwtGuard],
+  },RoleRepository,UserRepository,UserRoleRepository],
   exports : [UserRepository,UserRoleRepository]
 })
 export class UserModule {}

@@ -15,7 +15,7 @@ import { AuthModule } from 'src/auth/auth.module';
 @Module({
   imports :[TypeOrmModule.forFeature([Menu,Front,MenuFrontRl]),AuthModule,FrontModule],
   controllers: [MenuController],
-  providers: [MenuService,MenuRepository,FrontRepository,MenuFrontRepository,JwtGuard],
+  providers: [MenuService,MenuRepository,MenuFrontRepository],
   exports : [MenuRepository,MenuFrontRepository]
 })
 export class MenuModule {}
